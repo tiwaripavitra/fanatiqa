@@ -1,0 +1,21 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: "3.7"
+
+#Define services
+services:  #Front-end react js Application
+  fanatiqa-ui:
+    build: 
+      context: ./fanatiqa-frontend
+      dockerfile: ./Dockerfile.prod
+    container_name: fanatiqa-ui
+    args:
+      - REACT_APP_NAME=PAVITRA-APP
+    ports:
+      - "8080:80"
+    #environment:
+     # - REACT_APP_NAME=PAVITRA-APP
+     # - CHOKIDAR_POLLING=true #only for windows even using powershell
+    #one can also pass env file path using below declaaration
+    #env_file:
+    #  - ./.env
+

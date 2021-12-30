@@ -1,0 +1,51 @@
+version: "3.8"
+services:
+### Postgres Database ###
+  postgres:
+    image: postgres:10.4
+    ports:
+      - "35000:5432"
+    environment: 
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+### Postgres Adminer ###
+  postgres_admin:
+    image: dpage/pgadmin4:4.28
+    depends_on:
+      - postgres
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: admin@admin.de
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "5050:80"
+###Spring boot- Fanatiqa-backend
+ #Back-end Spring Boot Application
+  api:
+    #The docker file  build the fanatiqa-backend jar and provides the docker image with the following name.
+    build: ./fanatiqa-backend
+     # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    depends_on:
+      - postgres
+    environment: 
+      DATABASE_URL: postgresql://postgres:5432/db
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+    ports:
+      - "8080:3100"
+  
+  fanatiqa-ui:
+    stdin_open: true
+    tty: true
+    build: ./fanatiqa-frontend
+    ports:
+      - "3000:3000"
+    volumes: 
+      - ./fanatiqa-frontend/src:/app/src:ro
+    environment:
+      - REACT_APP_NAME=PAVITRA-APP
+      - CHOKIDAR_POLLING=true #only for windows even using powershell
+    #one can also pass env file path using below declaaration
+    #env_file:
+    #  - ./.env
+    

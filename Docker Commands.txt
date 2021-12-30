@@ -1,0 +1,109 @@
+Git commands
+
+to initialize the repository:
+
+git init - local repo initialization
+git status to check status of all files
+git add . - to add all files to the local repo
+git commit -m "commit messages" -- commits files to local repo.
+
+link to remote repo
+
+git remote add origin <url of the github remote repository>
+
+in case to list existing remote origins
+git remote -v
+
+In case to remove existing remote origin
+git remote remove origin 
+
+git push -u origin master
+
+
+Jenkins in Docker
+
+jenkins runs on tomcat in docker so port 8080 should be mapped to machine 8080
+another port 50000 is used for future slaves creation for jenkins
+-d is detached mode
+-v is volume 
+docker run -p 8080:8080 -p 50000:50000 -d -v jenkins_home:/var/jenkins/home jenkins/jenkins:latest
+
+admin user: jenkins-admin
+admin password: fanatiqa@2021$
+
+
+docker commands
+
+build: Docker build and publish
+docker-image-name
+credentials
+
+
+
+
+
+
+
+
+
+
+
+
+
+Building a docker image
+
+docker build -t fanatiqa-frontend .
+
+running a container or docker image
+
+docker run -d -p 3000:3000 --name docker-frontend-container fanatiqa-frontend
+
+actual command to use:
+
+docker run -d -p 3000:3000 --name docker-frontend-containe -i -t fanatiqa-frontend
+
+
+to go to running container bash 
+
+docker exec docker-frontend-container bash
+
+
+docker run -v ${pwd}\src:/app/src -d -p 3000:3000 --name docker-frontend-container -i -t fanatiqa-frontend
+if the above command doesnt work for code refresh automatically for docker then use the below one:
+
+docker run -e 	CHOKIDAR_USEPOLLING=true -v ${pwd}\src:/app/src:ro -d -p 3000:3000 --name docker-frontend-container -i -t fanatiqa-frontend
+
+adding :ro means container cannot anychange to my filesystem file and it is one way only application can make changes to container files.
+
+
+to pass value to environment variable set in dockerfile, we have to use ${process.env.<varaible name>}
+or we can create .env file 
+AND REMOVE ENV VARAIBLE FROM COMMAND AND USE IT LIKE THIS.
+
+docker run --env-file ./.env -v ${pwd}\src:/app/src:ro -d -p 3000:3000 --name docker-frontend-container -i -t fanatiqa-frontend
+
+Services in docker compose file represnts each container
+
+
+docker compose dont catch if any changes has been done to the dockerfile or if same name image already exist. so we have to inform docker compose specificllay to build the app again
+
+use command: docker-compose up -d --build
+
+docker build -f ./Dockerfile.prod .
+
+
+for multiple docker compose files
+
+docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d --build 
+
+docker-compose -f docker-compose.yml -f docker-compose-dev.yml down
+
+
+deploying postgress using docker:
+to validate postgress in docker container
+
+docker exec -it <postgres_container_name> psql -U postgres <db-name>
+
+
+
+

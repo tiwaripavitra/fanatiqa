@@ -1,0 +1,47 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: "3.7"
+
+#Define services
+services:  #Front-end react js Application
+
+#PostgreSQL Database for the application
+  postgres_db:
+    image: "postgres:9.6"
+    restart: always
+    #container_name: fanatiqa-postgres
+    #Volume mounted for database for the storage
+    volumes:
+      - fanatiqa-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432 # Forward the exposed port 5432 on the container to port 5432 on the host machine
+
+    #Environment variable for DB name, user and password
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=fanatiqa_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  #Back-end Spring Boot Application
+  fanatiqa-app:
+    #The docker file in scrum-app build the jar and provides the docker image with the following name.
+    build: ./fanatiqa-backend
+    container_name: fanatiqa-app
+    ports:
+      - 8085:8085 # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    depends_on:
+      - postgres_db
+
+  fanatiqa-ui:
+    depends_on:
+      - fanatiqa-app
+
+#Volumes for DB data
+volumes:
+  fanatiqa-data:
+
+   

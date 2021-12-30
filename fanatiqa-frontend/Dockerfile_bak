@@ -1,0 +1,44 @@
+# set the base image
+# n/b: for production, node is only used for building 
+# the static Html and javascript files
+# as react creates static html and js files after build
+# these are what will be served by nginx
+# use alias build to be easier to refer this container elsewhere
+# e.g inside nginx container
+FROM node:12.18.2 as build
+#FROM node:alpine as build
+# set working directory
+# this is the working folder in the container
+# from which the app will be running from
+WORKDIR /app
+# copy everything to /app directory
+# as opposed to on dev, in prod everything is copied to docker
+COPY package.json /app 
+# add the node_modules folder to $PATH
+#ENV PATH /app/node_modules/.bin:$PATH
+# install and cache dependencies
+#RUN yarn install
+#build the project for production
+#RUN npm run build
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+
+
+
+
+
+#FROM node as builder
+#WORKDIR /app
+#COPY package.json .
+#RUN npm run build
+#COPY . .
+#EXPOSE 3000
+#FROM ngnix:alpine
+#COPY --from=builder /app/build /user/share/ngnix/html
+
+#this is the command to run to produce production build.
+# docker build -t fanatiqa-frontend:ngnix -f Dockerfile_Production .
+# docker run command for production
+# docker run -p 8081:80(ngnix port) app-name:ngnix

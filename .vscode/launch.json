@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-SpringBootSecurityPostgresqlApplication<spring-boot-security-postgresql>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.fanatiqa.spring.security.postgresql.SpringBootSecurityPostgresqlApplication",
+            "projectName": "spring-boot-security-postgresql",
+            "args": ""
+        }
+    ]
+}
